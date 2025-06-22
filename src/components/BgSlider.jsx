@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import assets from "../assets/assets";
 
+// Available categories for image previews
 const categories = [
   { name: "People", icon: "👤", description: "Perfect for portraits and headshots" },
   { name: "Products", icon: "📦", description: "Ideal for e-commerce listings" },
@@ -9,27 +10,13 @@ const categories = [
   { name: "Graphics", icon: "🎨", description: "Clean graphics and logos" },
 ];
 
+// Images mapped to each category
 const categoryImages = {
-  People: {
-    original: assets.people_org,
-    removed: assets.people,
-  },
-  Products: {
-    original: assets.product,
-    removed: assets.product_removed,
-  },
-  Animals: {
-    original: assets.animal,
-    removed: assets.animal_removed,
-  },
-  Cars: {
-    original: assets.car,
-    removed: assets.car_removed,
-  },
-  Graphics: {
-    original: assets.graphics,
-    removed: assets.graphics_removed,
-  },
+  People: { original: assets.people_org, removed: assets.people },
+  Products: { original: assets.product, removed: assets.product_removed },
+  Animals: { original: assets.animal, removed: assets.animal_removed },
+  Cars: { original: assets.car, removed: assets.car_removed },
+  Graphics: { original: assets.graphics, removed: assets.graphics_removed },
 };
 
 const BgSlider = () => {
@@ -40,47 +27,43 @@ const BgSlider = () => {
   const [isAutoPlaying, setIsAutoPlaying] = useState(false);
   const [viewMode, setViewMode] = useState("slider"); // 'slider', 'before', 'after'
   const [isFullscreen, setIsFullscreen] = useState(false);
+
   const containerRef = useRef(null);
   const autoPlayRef = useRef(null);
 
   const currentImages = categoryImages[activeCategory];
   const currentCategory = categories.find(cat => cat.name === activeCategory);
 
+  // Slider movement logic
   const handleSliderChange = (e) => {
     setSliderPosition(parseInt(e.target.value));
     setIsAutoPlaying(false);
-    if (autoPlayRef.current) {
-      clearInterval(autoPlayRef.current);
-    }
+    clearInterval(autoPlayRef.current);
   };
 
+  // Switch categories and reset state
   const handleCategoryChange = (category) => {
     if (category === activeCategory) return;
     setActiveCategory(category);
     setImageLoaded({ original: false, removed: false });
     setIsAutoPlaying(false);
-    if (autoPlayRef.current) {
-      clearInterval(autoPlayRef.current);
-    }
+    clearInterval(autoPlayRef.current);
   };
 
+  // Autoplay toggle (slides the slider automatically)
   const toggleAutoPlay = () => {
     if (isAutoPlaying) {
       setIsAutoPlaying(false);
-      if (autoPlayRef.current) {
-        clearInterval(autoPlayRef.current);
-      }
+      clearInterval(autoPlayRef.current);
     } else {
       setIsAutoPlaying(true);
       autoPlayRef.current = setInterval(() => {
-        setSliderPosition(prev => {
-          const newPos = prev >= 90 ? 10 : prev + 2;
-          return newPos;
-        });
+        setSliderPosition((prev) => (prev >= 90 ? 10 : prev + 2));
       }, 50);
     }
   };
 
+  // Fullscreen toggle
   const toggleFullscreen = () => {
     if (!document.fullscreenElement) {
       containerRef.current?.requestFullscreen();
@@ -91,49 +74,28 @@ const BgSlider = () => {
     }
   };
 
+  // Changes view mode (slider/before/after)
   const handleViewModeChange = (mode) => {
     setViewMode(mode);
-    if (mode === 'before') setSliderPosition(100);
-    else if (mode === 'after') setSliderPosition(0);
+    if (mode === "before") setSliderPosition(100);
+    else if (mode === "after") setSliderPosition(0);
     else setSliderPosition(50);
   };
 
-  // Auto-advance categories every 8 seconds
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     if (!isAutoPlaying) {
-  //       const currentIndex = categories.findIndex(cat => cat.name === activeCategory);
-  //       const nextIndex = (currentIndex + 1) % categories.length;
-  //       handleCategoryChange(categories[nextIndex].name);
-  //     }
-  //   }, 8000);
-
-  //   return () => clearInterval(interval);
-  // }, [activeCategory, isAutoPlaying]);
-
-  // When both images are loaded, start transition and reset slider
+  // When both images load, briefly show a transition animation
   useEffect(() => {
     if (imageLoaded.original && imageLoaded.removed) {
       setIsTransitioning(true);
-      if (viewMode === 'slider') setSliderPosition(50);
+      if (viewMode === "slider") setSliderPosition(50);
       const timeout = setTimeout(() => setIsTransitioning(false), 400);
       return () => clearTimeout(timeout);
     }
   }, [imageLoaded, viewMode]);
 
-  // Cleanup auto-play on unmount
-  // useEffect(() => {
-  //   return () => {
-  //     if (autoPlayRef.current) {
-  //       clearInterval(autoPlayRef.current);
-  //     }
-  //   };
-  // }, []);
-
   return (
     <section className="mb-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
-        {/* Header Section */}
+        {/* Section Header */}
         <div className="text-center mb-12">
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 text-gray-900">
             Stunning Quality Results
@@ -151,7 +113,7 @@ const BgSlider = () => {
           </div>
         </div>
 
-        {/* Category Selection */}
+        {/* Category Buttons */}
         <div className="flex justify-center mb-8">
           <div className="bg-white rounded-2xl p-2 shadow-lg border border-gray-200">
             <div className="flex flex-wrap gap-2 justify-center max-w-4xl">
@@ -169,7 +131,7 @@ const BgSlider = () => {
                     <span className="text-lg">{category.icon}</span>
                     <span className="font-semibold">{category.name}</span>
                   </div>
-                  
+
                   {/* Tooltip */}
                   <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap pointer-events-none z-10">
                     {category.description}
@@ -181,22 +143,22 @@ const BgSlider = () => {
           </div>
         </div>
 
-        {/* Control Panel */}
+        {/* Controls Panel */}
         <div className="flex flex-wrap justify-center items-center gap-4 mb-8">
-          {/* View Mode Toggle */}
+          {/* View Modes */}
           <div className="flex bg-gray-100 rounded-xl p-1">
             {[
-              { mode: 'before', label: 'Before', icon: '🖼️' },
-              { mode: 'slider', label: 'Compare', icon: '⚡' },
-              { mode: 'after', label: 'After', icon: '✨' }
+              { mode: "before", label: "Before", icon: "🖼️" },
+              { mode: "slider", label: "Compare", icon: "⚡" },
+              { mode: "after", label: "After", icon: "✨" },
             ].map(({ mode, label, icon }) => (
               <button
                 key={mode}
                 onClick={() => handleViewModeChange(mode)}
                 className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
                   viewMode === mode
-                    ? 'bg-white text-indigo-600 shadow-sm'
-                    : 'text-gray-600 hover:text-gray-900'
+                    ? "bg-white text-indigo-600 shadow-sm"
+                    : "text-gray-600 hover:text-gray-900"
                 }`}
               >
                 <span>{icon}</span>
@@ -205,20 +167,20 @@ const BgSlider = () => {
             ))}
           </div>
 
-          {/* Auto-play Toggle */}
+          {/* Auto Play */}
           <button
             onClick={toggleAutoPlay}
             className={`flex items-center space-x-2 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 ${
               isAutoPlaying
-                ? 'bg-green-100 text-green-700 border border-green-200'
-                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                ? "bg-green-100 text-green-700 border border-green-200"
+                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
             }`}
           >
-            <span>{isAutoPlaying ? '⏸️' : '▶️'}</span>
-            <span>{isAutoPlaying ? 'Pause' : 'Auto Play'}</span>
+            <span>{isAutoPlaying ? "⏸️" : "▶️"}</span>
+            <span>{isAutoPlaying ? "Pause" : "Auto Play"}</span>
           </button>
 
-          {/* Fullscreen Toggle */}
+          {/* Fullscreen */}
           <button
             onClick={toggleFullscreen}
             className="flex items-center space-x-2 px-4 py-2 rounded-xl text-sm font-medium bg-gray-100 text-gray-600 hover:bg-gray-200 transition-all duration-200"
@@ -228,21 +190,22 @@ const BgSlider = () => {
           </button>
         </div>
 
-        {/* Main Slider Container */}
-        <div 
+        {/* Image Comparison Container */}
+        <div
           ref={containerRef}
           className={`relative w-full max-w-6xl mx-auto rounded-2xl overflow-hidden shadow-2xl border border-gray-200 ${
-            isFullscreen ? 'bg-black' : 'bg-white'
+            isFullscreen ? "bg-black" : "bg-white"
           }`}
         >
-          {/* Image Container */}
           <div className="relative aspect-[16/10] sm:aspect-[16/9]">
-            {/* Loading State */}
+            {/* Loader */}
             {(!imageLoaded.original || !imageLoaded.removed) && (
               <div className="absolute inset-0 bg-gray-100 flex items-center justify-center z-20">
                 <div className="flex flex-col items-center space-y-4">
                   <div className="w-12 h-12 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
-                  <p className="text-gray-600 font-medium">Loading {currentCategory.name.toLowerCase()} images...</p>
+                  <p className="text-gray-600 font-medium">
+                    Loading {currentCategory.name.toLowerCase()} images...
+                  </p>
                 </div>
               </div>
             )}
@@ -256,12 +219,16 @@ const BgSlider = () => {
                 isTransitioning ? "ease-in-out" : ""
               }`}
               style={{
-                clipPath: viewMode === 'slider' ? `inset(0 ${100 - sliderPosition}% 0 0)` : 
-                          viewMode === 'before' ? 'inset(0 0 0 0)' : 'inset(0 100% 0 0)',
+                clipPath:
+                  viewMode === "slider"
+                    ? `inset(0 ${100 - sliderPosition}% 0 0)`
+                    : viewMode === "before"
+                    ? "inset(0 0 0 0)"
+                    : "inset(0 100% 0 0)",
               }}
             />
 
-            {/* Processed Image */}
+            {/* Removed Background Image */}
             <img
               src={currentImages.removed}
               alt={`${activeCategory} background removed`}
@@ -270,13 +237,17 @@ const BgSlider = () => {
                 isTransitioning ? "ease-in-out" : ""
               }`}
               style={{
-                clipPath: viewMode === 'slider' ? `inset(0 0 0 ${sliderPosition}%)` :
-                          viewMode === 'after' ? 'inset(0 0 0 0)' : 'inset(0 0 0 100%)',
+                clipPath:
+                  viewMode === "slider"
+                    ? `inset(0 0 0 ${sliderPosition}%)`
+                    : viewMode === "after"
+                    ? "inset(0 0 0 0)"
+                    : "inset(0 0 0 100%)",
               }}
             />
 
-            {/* Slider Control */}
-            {viewMode === 'slider' && (
+            {/* Slider (Only in slider view) */}
+            {viewMode === "slider" && (
               <>
                 <input
                   type="range"
@@ -285,15 +256,12 @@ const BgSlider = () => {
                   value={sliderPosition}
                   onChange={handleSliderChange}
                   className="absolute z-30 top-0 left-0 w-full h-full appearance-none bg-transparent focus:outline-none cursor-grab active:cursor-grabbing"
-                  style={{ background: 'transparent' }}
                 />
 
-                {/* Slider Line */}
                 <div
                   className="absolute top-0 bottom-0 w-1 bg-white shadow-lg z-20 pointer-events-none"
-                  style={{ left: `${sliderPosition}%`, transform: 'translateX(-50%)' }}
+                  style={{ left: `${sliderPosition}%`, transform: "translateX(-50%)" }}
                 >
-                  {/* Slider Handle */}
                   <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-8 h-8 bg-white rounded-full shadow-lg border-2 border-indigo-500 flex items-center justify-center">
                     <div className="w-3 h-3 bg-indigo-500 rounded-full"></div>
                   </div>
@@ -302,7 +270,7 @@ const BgSlider = () => {
             )}
 
             {/* Labels */}
-            {viewMode === 'slider' && (
+            {viewMode === "slider" && (
               <>
                 <div className="absolute top-4 left-4 bg-black bg-opacity-70 text-white px-3 py-2 rounded-lg text-sm font-medium">
                   Original
@@ -313,10 +281,10 @@ const BgSlider = () => {
               </>
             )}
 
-            {/* Single View Labels */}
-            {viewMode !== 'slider' && (
+            {/* Single Label View */}
+            {viewMode !== "slider" && (
               <div className="absolute top-4 left-4 bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-4 py-2 rounded-lg text-sm font-semibold">
-                {viewMode === 'before' ? 'Original Image' : 'Background Removed'}
+                {viewMode === "before" ? "Original Image" : "Background Removed"}
               </div>
             )}
           </div>
@@ -325,66 +293,61 @@ const BgSlider = () => {
           <div className="p-4 sm:p-6 bg-gradient-to-r from-gray-50 to-white border-t border-gray-200">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0">
               <div className="flex items-center space-x-4">
-                <div className="flex items-center space-x-2">
-                  <span className="text-2xl">{currentCategory.icon}</span>
-                  <div>
-                    <h3 className="font-bold text-gray-900">{activeCategory} Category</h3>
-                    <p className="text-sm text-gray-600">{currentCategory.description}</p>
-                  </div>
+                <span className="text-2xl">{currentCategory.icon}</span>
+                <div>
+                  <h3 className="font-bold text-gray-900">{activeCategory} Category</h3>
+                  <p className="text-sm text-gray-600">{currentCategory.description}</p>
                 </div>
               </div>
 
-              <div className="flex items-center space-x-4">
-                {/* Quality Indicators */}
-                <div className="flex items-center space-x-2 text-sm">
-                  <div className="flex items-center space-x-1">
-                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                    <span className="text-gray-600">4K Quality</span>
-                  </div>
-                  <div className="flex items-center space-x-1">
-                    <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                    <span className="text-gray-600">AI Powered</span>
-                  </div>
+              <div className="flex items-center space-x-4 text-sm">
+                <div className="flex space-x-2">
+                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                  <span className="text-gray-600">4K Quality</span>
                 </div>
-
-                {/* Processing Time */}
-                <div className="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
-                  ⚡ ~3 seconds
+                <div className="flex space-x-2">
+                  <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                  <span className="text-gray-600">AI Powered</span>
                 </div>
+                <span className="text-gray-500 bg-gray-100 px-3 py-1 rounded-full">⚡ ~3 seconds</span>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Additional Features */}
+        {/* Features Section */}
         <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div className="bg-gradient-to-br from-blue-50 to-indigo-50 p-6 rounded-xl border border-blue-100">
-            <div className="text-blue-600 text-2xl mb-3">🎯</div>
-            <h3 className="font-bold text-gray-900 mb-2">Precision Cutting</h3>
-            <p className="text-sm text-gray-600">Advanced AI detects edges with pixel-perfect accuracy</p>
-          </div>
-          
-          <div className="bg-gradient-to-br from-green-50 to-emerald-50 p-6 rounded-xl border border-green-100">
-            <div className="text-green-600 text-2xl mb-3">⚡</div>
-            <h3 className="font-bold text-gray-900 mb-2">Lightning Fast</h3>
-            <p className="text-sm text-gray-600">Process images in seconds, not minutes</p>
-          </div>
-          
-          <div className="bg-gradient-to-br from-purple-50 to-pink-50 p-6 rounded-xl border border-purple-100">
-            <div className="text-purple-600 text-2xl mb-3">🔄</div>
-            <h3 className="font-bold text-gray-900 mb-2">Batch Processing</h3>
-            <p className="text-sm text-gray-600">Upload multiple images and process them all at once</p>
-          </div>
+          {[
+            {
+              icon: "🎯",
+              title: "Precision Cutting",
+              desc: "Advanced AI detects edges with pixel-perfect accuracy",
+              color: "from-blue-50 to-indigo-50 border-blue-100 text-blue-600",
+            },
+            {
+              icon: "⚡",
+              title: "Lightning Fast",
+              desc: "Process images in seconds, not minutes",
+              color: "from-green-50 to-emerald-50 border-green-100 text-green-600",
+            },
+            {
+              icon: "🔄",
+              title: "Batch Processing",
+              desc: "Upload multiple images and process them all at once",
+              color: "from-purple-50 to-pink-50 border-purple-100 text-purple-600",
+            },
+          ].map((f, idx) => (
+            <div
+              key={idx}
+              className={`bg-gradient-to-br ${f.color} p-6 rounded-xl border`}
+            >
+              <div className={`text-2xl mb-3`}>{f.icon}</div>
+              <h3 className="font-bold text-gray-900 mb-2">{f.title}</h3>
+              <p className="text-sm text-gray-600">{f.desc}</p>
+            </div>
+          ))}
         </div>
       </div>
-
-      <style jsx>{`
-        @media (max-width: 640px) {
-          .min-w-[100px] {
-            min-width: 80px;
-          }
-        }
-      `}</style>
     </section>
   );
 };

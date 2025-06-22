@@ -1,28 +1,26 @@
 import { createContext, useState } from "react";
 import { useAuth, useClerk, useUser } from "@clerk/clerk-react";
-import { useNavigate } from "react-router-dom"; // ✅ Import this properly
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-hot-toast";
 
 export const AppContext = createContext();
 
-const AppContextProvider = (props) => {
+const AppContextProvider = ({ children }) => {
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
   const [credit, setCredit] = useState(0);
   const { getToken } = useAuth();
-  const [image, setImage] = useState(false);
-  const [resultImage, setResultImage] = useState(false);
+  const [image, setImage] = useState(null);
+  const [resultImage, setResultImage] = useState(null);
   const { isSignedIn } = useUser();
   const { openSignIn } = useClerk();
-  const navigate = useNavigate(); // ✅ valid only if this is inside a <BrowserRouter>
+  const navigate = useNavigate(); // Ensure App is wrapped in <BrowserRouter>
 
   const loadUserCredits = async () => {
     try {
       const token = await getToken();
       const response = await axios.get(`${backendUrl}/users/credits`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       });
 
       if (response.data.success) {
@@ -31,6 +29,7 @@ const AppContextProvider = (props) => {
         toast.error("Error loading user credits");
       }
     } catch (error) {
+      console.error("Failed to load credits:", error);
       toast.error("Error loading user credits");
     }
   };
@@ -43,7 +42,7 @@ const AppContextProvider = (props) => {
       }
 
       setImage(selectedImage);
-      setResultImage(false);
+      setResultImage(null);
       navigate("/result");
 
       const token = await getToken();
@@ -60,26 +59,26 @@ const AppContextProvider = (props) => {
       setCredit((prev) => prev - 1);
       toast.success("Background removed successfully!");
     } catch (error) {
-      console.error(error);
+      console.error("Background removal failed:", error);
       toast.error("Error removing background. Please try again!");
     }
   };
 
-  const contextValue = {
-    credit,
-    setCredit,
-    image,
-    setImage,
-    resultImage,
-    setResultImage,
-    backendUrl,
-    loadUserCredits,
-    removeBg,
-  };
-
   return (
-    <AppContext.Provider value={contextValue}>
-      {props.children}
+    <AppContext.Provider
+      value={{
+        credit,
+        setCredit,
+        image,
+        setImage,
+        resultImage,
+        setResultImage,
+        backendUrl,
+        loadUserCredits,
+        removeBg,
+      }}
+    >
+      {children}
     </AppContext.Provider>
   );
 };

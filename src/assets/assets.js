@@ -11,7 +11,7 @@ import car from './car.jpg';
 import car_removed from './car-removed.png';
 import graphics from './graphics.jpg';
 import graphics_removed from './graphics-removed.png';
-
+import avatar from './VS.jpg';
 
 const assets = {
   logo,
@@ -27,6 +27,7 @@ const assets = {
   car_removed,
   graphics,
   graphics_removed,
+  avatar,
 };
 
 export default assets;

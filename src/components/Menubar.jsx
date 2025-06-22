@@ -19,27 +19,21 @@ const Menubar = () => {
   const navigate = useNavigate();
 
   const navLinks = [
-    { key: "home", href: "/header", route: "/header" },
-    { key: "remove", href: "/trynow", route: "/trynow" },
-    { key: "pricing", href: "/pricing", route: "/pricing" },
-    { key: "faq", href: "/legalpages", route: "/legalpages" },
-    { key: "contact", href: "/aboutus", route: "/aboutus" }
+    { key: "home", route: "/header" },
+    { key: "remove", route: "/trynow" },
+    { key: "pricing", route: "/pricing" },
+    { key: "faq", route: "/legalpages" },
+    { key: "contact", route: "/aboutus" }
   ];
 
   const getFormattedLabel = (key) => {
     switch (key) {
-      case "remove":
-        return "Remove BG";
-      case "faq":
-        return "FAQ";
-      case "home":
-        return "Home";
-      case "pricing":
-        return "Pricing";
-      case "contact":
-        return "Contact";
-      default:
-        return key.charAt(0).toUpperCase() + key.slice(1);
+      case "remove": return "Remove BG";
+      case "faq": return "FAQ";
+      case "home": return "Home";
+      case "pricing": return "Pricing";
+      case "contact": return "Contact";
+      default: return key.charAt(0).toUpperCase() + key.slice(1);
     }
   };
 
@@ -58,7 +52,7 @@ const Menubar = () => {
     openSignUp({});
   };
 
-  // Lock scroll on mobile menu open
+  // Prevent body scroll when mobile menu is open
   useEffect(() => {
     document.body.style.overflow = menuOpen ? "hidden" : "auto";
   }, [menuOpen]);
@@ -67,38 +61,38 @@ const Menubar = () => {
     <nav className="bg-white px-6 md:px-10 py-4 flex justify-between items-center sticky top-0 shadow-md z-50">
       {/* Logo */}
       <div
-        className="flex items-center space-x-2 cursor-pointer"
+        className="flex items-center gap-2 cursor-pointer"
         onClick={() => window.open("https://alphacut.ai", "_blank")}
       >
-        <img src={assets.logo} alt="logo" className="h-10 w-auto object-contain" />
+        <img src={assets.logo} alt="AlphaCut logo" className="h-10 w-auto" />
         <span className="text-2xl md:text-3xl font-bold text-indigo-700 tracking-tight">
           AlphaCut.<span className="text-gray-400">AI</span>
         </span>
       </div>
 
-      {/* Desktop Menu */}
+      {/* Desktop Navigation */}
       <div className="hidden md:flex items-center space-x-6">
-        {navLinks.map((item) => (
+        {navLinks.map(({ key, route }) => (
           <a
-            key={item.key}
-            href={item.href}
+            key={key}
+            href={route}
             onClick={(e) => {
               e.preventDefault();
-              handleNavigation(item.route);
+              handleNavigation(route);
             }}
-            className="text-gray-600 hover:text-indigo-600 hover:underline hover:underline-offset-4 transition-all font-medium cursor-pointer"
+            className="text-gray-600 hover:text-indigo-600 hover:underline hover:underline-offset-4 font-medium transition"
           >
-            {getFormattedLabel(item.key)}
+            {getFormattedLabel(key)}
           </a>
         ))}
 
         <SignedOut>
-          <button className="text-gray-700 hover:text-indigo-600 transition" onClick={handleOpenLogin}>
+          <button onClick={handleOpenLogin} className="text-gray-700 hover:text-indigo-600 transition">
             Login
           </button>
           <button
-            className="bg-indigo-100 hover:bg-indigo-200 text-indigo-700 font-semibold px-4 py-2 rounded-full transition"
             onClick={handleOpenRegister}
+            className="bg-indigo-100 hover:bg-indigo-200 text-indigo-700 font-semibold px-4 py-2 rounded-full transition"
           >
             Sign up
           </button>
@@ -108,7 +102,7 @@ const Menubar = () => {
           <div className="flex items-center gap-4">
             <button
               onClick={() => navigate("/pricing")}
-              className="flex items-center gap-2 bg-blue-100 px-4 py-2 rounded-full hover:scale-105 transition-all cursor-pointer"
+              className="flex items-center gap-2 bg-blue-100 px-4 py-2 rounded-full hover:scale-105 transition"
             >
               <img src={assets.credits} alt="credits" className="h-5 w-5" />
               <span className="text-sm font-medium text-gray-600">Credits: {credit}</span>
@@ -128,41 +122,41 @@ const Menubar = () => {
         </SignedIn>
       </div>
 
-      {/* Mobile Menu Toggle */}
+      {/* Mobile Toggle */}
       <div className="md:hidden">
         <button onClick={() => setMenuOpen(!menuOpen)} aria-label="Toggle Menu">
           {menuOpen ? <X size={28} /> : <Menu size={28} />}
         </button>
       </div>
 
-      {/* Mobile Dropdown Menu */}
+      {/* Mobile Menu */}
       <div
-        className={`md:hidden absolute top-16 right-4 w-[90%] max-w-xs bg-white shadow-2xl rounded-lg px-6 py-4 transform transition-all duration-300 ${
+        className={`md:hidden absolute top-16 right-4 w-[90%] max-w-xs bg-white shadow-2xl rounded-lg px-6 py-4 transform transition-all duration-300 z-50 ${
           menuOpen ? "opacity-100 scale-100" : "opacity-0 scale-95 pointer-events-none"
-        } z-50`}
+        }`}
       >
         <div className="flex flex-col space-y-4">
-          {navLinks.map((item) => (
+          {navLinks.map(({ key, route }) => (
             <a
-              key={item.key}
-              href={item.href}
+              key={key}
+              href={route}
               onClick={(e) => {
                 e.preventDefault();
-                handleNavigation(item.route);
+                handleNavigation(route);
               }}
-              className="text-left text-gray-700 hover:text-indigo-600 font-medium transition cursor-pointer"
+              className="text-left text-gray-700 hover:text-indigo-600 font-medium transition"
             >
-              {getFormattedLabel(item.key)}
+              {getFormattedLabel(key)}
             </a>
           ))}
 
           <SignedOut>
-            <button className="text-gray-700 hover:text-indigo-600" onClick={handleOpenLogin}>
+            <button onClick={handleOpenLogin} className="text-gray-700 hover:text-indigo-600">
               Login
             </button>
             <button
-              className="bg-indigo-100 hover:bg-indigo-200 text-indigo-700 font-medium px-4 py-2 rounded-full transition"
               onClick={handleOpenRegister}
+              className="bg-indigo-100 hover:bg-indigo-200 text-indigo-700 font-medium px-4 py-2 rounded-full transition"
             >
               Sign up
             </button>
@@ -177,7 +171,7 @@ const Menubar = () => {
               className="flex items-center gap-2 bg-blue-100 px-3 py-2 rounded-full hover:scale-105 transition"
             >
               <img src={assets.credits} alt="credits" className="h-5 w-5" />
-              <p className="text-sm font-medium text-gray-600">Credits: {credit}</p>
+              <span className="text-sm font-medium text-gray-600">Credits: {credit}</span>
             </button>
             <p className="text-gray-600">Hi, {user?.firstName || "User"}</p>
             <UserButton

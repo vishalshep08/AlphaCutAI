@@ -1,19 +1,25 @@
 import assets from "../assets/assets";
 
 const Footer = () => {
+  // Scroll to top of the page
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
   return (
     <footer className="bg-gradient-to-br from-gray-50 to-gray-100 border-t border-gray-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        {/* Main Grid */}
+        
+        {/* Main Footer Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-10">
-          {/* Brand Section */}
+          
+          {/* Branding Section */}
           <div className="lg:col-span-2 space-y-4">
+            {/* Logo */}
             <div className="flex items-center gap-2">
               <img src={assets.logo} alt="AlphaCut.AI Logo" className="w-9 h-9" />
               <span className="text-xl font-bold text-gray-900">AlphaCut.AI</span>
             </div>
+
+            {/* Description */}
             <p className="text-gray-600 text-sm leading-relaxed">
               Remove backgrounds from images instantly with AI-powered precision. 
               Perfect for e-commerce, social media, and professional photography.
@@ -25,36 +31,39 @@ const Footer = () => {
                 Supported Formats
               </p>
               <div className="flex flex-wrap gap-2">
-                {["JPG", "PNG", "WEBP", "HEIC", "GIF"].map((format) => (
-                  <span key={format} className="px-2 py-1 bg-white border border-gray-200 rounded text-xs font-medium text-gray-700">
+                {["JPG", "PNG", "WEBP", "HEIC", "GIF"].map(format => (
+                  <span
+                    key={format}
+                    className="px-2 py-1 bg-white border border-gray-200 rounded text-xs font-medium text-gray-700"
+                  >
                     {format}
                   </span>
                 ))}
               </div>
             </div>
 
-            {/* Social Links */}
+            {/* Social Media Links */}
             <div className="flex gap-3 pt-3 flex-wrap">
               {[
                 {
                   link: "https://linkedin.com",
                   icon: "https://img.icons8.com/fluent/48/000000/linkedin-2.png",
-                  alt: "LinkedIn"
+                  alt: "LinkedIn",
                 },
                 {
                   link: "https://instagram.com",
                   icon: "https://img.icons8.com/fluent/48/000000/instagram-new.png",
-                  alt: "Instagram"
+                  alt: "Instagram",
                 },
                 {
                   link: "https://twitter.com",
                   icon: "https://img.icons8.com/fluent/48/000000/twitter.png",
-                  alt: "Twitter"
+                  alt: "Twitter",
                 },
                 {
                   link: "https://youtube.com",
                   icon: "https://img.icons8.com/fluent/48/000000/youtube-play.png",
-                  alt: "YouTube"
+                  alt: "YouTube",
                 },
               ].map(({ link, icon, alt }) => (
                 <a
@@ -115,7 +124,10 @@ const Footer = () => {
               <ul className="space-y-2">
                 {links.map(({ name, href }) => (
                   <li key={name}>
-                    <a href={href} className="text-sm text-gray-600 hover:text-indigo-600 transition-colors block">
+                    <a
+                      href={href}
+                      className="text-sm text-gray-600 hover:text-indigo-600 transition-colors block"
+                    >
                       {name}
                     </a>
                   </li>
@@ -125,30 +137,30 @@ const Footer = () => {
           ))}
         </div>
 
-        {/* Features */}
+        {/* Footer Feature Highlights */}
         <div className="mt-12 pt-8 border-t border-gray-200">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
             {[
               {
                 icon: <span className="text-green-600 font-bold text-sm">AI</span>,
                 title: "AI-Powered",
-                desc: "Advanced algorithms"
+                desc: "Advanced algorithms",
               },
               {
                 icon: <span className="text-blue-600 text-lg">⚡</span>,
                 title: "Lightning Fast",
-                desc: "Process in seconds"
+                desc: "Process in seconds",
               },
               {
                 icon: <span className="text-purple-600 text-lg">🔒</span>,
                 title: "Secure",
-                desc: "Privacy protected"
+                desc: "Privacy protected",
               },
               {
                 icon: <span className="text-orange-600 text-lg">📱</span>,
                 title: "Any Device",
-                desc: "Works everywhere"
-              }
+                desc: "Works everywhere",
+              },
             ].map(({ icon, title, desc }) => (
               <div key={title} className="flex items-center space-x-3">
                 <div className="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center">
@@ -168,11 +180,14 @@ const Footer = () => {
       <div className="border-t border-gray-200 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
+            
+            {/* Copyright */}
             <p className="text-sm text-gray-600 text-center sm:text-left">
               &copy; {new Date().getFullYear()} AlphaCut.AI by{" "}
               <span className="font-semibold text-gray-900">Vishal Shep</span>
             </p>
 
+            {/* Locale + Back to Top */}
             <div className="flex items-center gap-4">
               <select className="text-sm border border-gray-200 rounded px-3 py-1 bg-white text-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500">
                 <option value="en">🇺🇸 English</option>

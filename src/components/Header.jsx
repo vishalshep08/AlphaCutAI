@@ -15,12 +15,23 @@ import assets from '../assets/assets';
 
 const Header = () => {
   const { removeBg } = useContext(AppContext);
+  const navigate = useNavigate();
+
+  // States
   const [isVideoPlaying, setIsVideoPlaying] = useState(true);
   const [dragActive, setDragActive] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
-  const navigate = useNavigate();
 
+  // Feature List
+  const features = [
+    { icon: CheckCircle, text: '100% Automatic - No manual work needed' },
+    { icon: Zap, text: 'Lightning Fast - Results in 3 seconds' },
+    { icon: Download, text: 'High Quality - Maintains original resolution' },
+    { icon: Palette, text: 'Easy Editing - Add new backgrounds instantly' },
+  ];
+
+  // Upload Handlers
   const handleFileUpload = async (file) => {
     if (!file) return;
     setIsUploading(true);
@@ -54,31 +65,26 @@ const Header = () => {
     e.preventDefault();
     e.stopPropagation();
     setDragActive(false);
-    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+    if (e.dataTransfer.files?.[0]) {
       handleFileUpload(e.dataTransfer.files[0]);
     }
   };
 
   const handleFileChange = (e) => {
-    if (e.target.files && e.target.files[0]) {
+    if (e.target.files?.[0]) {
       handleFileUpload(e.target.files[0]);
     }
   };
 
-  const features = [
-    { icon: CheckCircle, text: '100% Automatic - No manual work needed' },
-    { icon: Zap, text: 'Lightning Fast - Results in 3 seconds' },
-    { icon: Download, text: 'High Quality - Maintains original resolution' },
-    { icon: Palette, text: 'Easy Editing - Add new backgrounds instantly' },
-  ];
-
   return (
     <div className="relative overflow-hidden rounded-3xl bg-white shadow-xl mb-16">
-      {/* Background effects */}
-      <div className="absolute inset-0 bg-gradient-to-br from-indigo-50 via-white to-purple-50 opacity-40 pointer-events-none"></div>
+      {/* Background Visual */}
+      <div className="absolute inset-0 bg-gradient-to-br from-indigo-50 via-white to-purple-50 opacity-40 pointer-events-none" />
+
       <div className="relative px-6 py-16 lg:py-24">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
-          {/* Left content */}
+          
+          {/* Text & Upload Section */}
           <div className="order-2 lg:order-1 text-center lg:text-left">
             <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-6 leading-tight">
               The fastest{' '}
@@ -93,6 +99,7 @@ const Header = () => {
               precision in just 3 seconds. No experience required!
             </p>
 
+            {/* Feature Highlights */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
               {features.map((feature, index) => (
                 <div key={index} className="flex items-center gap-3 text-gray-600 text-sm">
@@ -126,20 +133,18 @@ const Header = () => {
                 <div className="w-14 h-14 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full flex items-center justify-center text-white mb-4">
                   <Upload className="w-6 h-6" />
                 </div>
-                <h3 className="text-lg font-semibold text-gray-800 mb-1">
-                  Drop your image here
-                </h3>
-                <p className="text-sm text-gray-500 mb-4">
-                  or click to browse from your device
-                </p>
+                <h3 className="text-lg font-semibold text-gray-800 mb-1">Drop your image here</h3>
+                <p className="text-sm text-gray-500 mb-4">or click to browse from your device</p>
+
                 {isUploading && (
                   <div className="w-full bg-gray-200 rounded-full h-2 mb-4">
                     <div
                       className="bg-gradient-to-r from-indigo-600 to-purple-600 h-2 rounded-full transition-all duration-300"
                       style={{ width: `${uploadProgress}%` }}
-                    ></div>
+                    />
                   </div>
                 )}
+
                 <div className="flex flex-wrap justify-center gap-2 text-xs text-gray-400">
                   <span className="bg-gray-100 px-2 py-1 rounded">JPG</span>
                   <span className="bg-gray-100 px-2 py-1 rounded">PNG</span>
@@ -163,7 +168,7 @@ const Header = () => {
             </button>
           </div>
 
-          {/* Right video preview */}
+          {/* Video Preview Section */}
           <div className="order-1 lg:order-2 flex justify-center">
             <div className="relative group max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg">
               <div className="relative shadow-2xl rounded-3xl overflow-hidden transition-transform duration-300 hover:scale-105">
@@ -190,6 +195,8 @@ const Header = () => {
                   </div>
                 </div>
               </div>
+
+              {/* Labels */}
               <div className="absolute -top-4 -right-4 bg-green-500 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">
                 ✨ NEW
               </div>
