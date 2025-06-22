@@ -1,8 +1,8 @@
-import { useEffect, useState, useContext } from "react";
-import axios from "axios";
-import { useAuth, useUser } from "@clerk/clerk-react";
-import { AppContext } from "../context/AppContext";
-import { toast } from "react-hot-toast";
+import { useEffect, useState, useContext } from 'react';
+import axios from 'axios';
+import { useAuth, useUser } from '@clerk/clerk-react';
+import { AppContext } from '../context/AppContext';
+import { toast } from 'react-hot-toast';
 
 const UserSyncHandler = () => {
   const { isLoaded, isSignedIn, getToken } = useAuth();
@@ -11,43 +11,49 @@ const UserSyncHandler = () => {
   const { backendUrl, loadUserCredits } = useContext(AppContext);
 
   useEffect(() => {
+    const controller = new AbortController();
+
     const saveUser = async () => {
-      // Prevent syncing if not loaded, not signed in, or already synced
-      if (!isLoaded || !isSignedIn || synced) return;
+      if (!isLoaded || !isSignedIn || !user || synced) return;
 
       try {
         const token = await getToken();
 
-        // Prepare user data for backend sync
         const userData = {
           clerkId: user.id,
-          email: user.primaryEmailAddress?.emailAddress || "",
-          firstName: user.firstName || "",
-          lastName: user.lastName || "",
-          photoUrl: user.imageUrl || "",
-          // username: user.username || "", // Uncomment if your user has username
+          email: user?.primaryEmailAddress?.emailAddress || '',
+          firstName: user?.firstName || '',
+          lastName: user?.lastName || '',
+          photoUrl: user?.imageUrl || '',
         };
 
-        // Send user data to backend API
         await axios.post(`${backendUrl}/users`, userData, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
+          signal: controller.signal,
         });
 
-        setSynced(true); // Avoid repeat syncs
-        await loadUserCredits(); // Refresh user credits from backend
-        toast.success("User synced successfully!");
+        setSynced(true);
+        await loadUserCredits();
+        toast.success('User synced successfully!');
       } catch (error) {
-        console.error("User sync failed", error);
-        toast.error("User sync failed. Please try again!");
+        if (axios.isCancel(error)) return;
+
+        const msg =
+          error.response?.data?.message ||
+          error.message ||
+          'User sync failed. Please try again!';
+        console.error('User sync failed:', error);
+        toast.error(msg);
       }
     };
 
     saveUser();
-  }, [isLoaded, isSignedIn, getToken, user, synced, backendUrl, loadUserCredits]);
 
-  // This component doesn't render UI
+    return () => controller.abort();
+  }, [isLoaded, isSignedIn, user, synced, getToken, backendUrl, loadUserCredits]);
+
   return null;
 };
 
