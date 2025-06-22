@@ -1,32 +1,26 @@
-import Link from "next/link";
+import { Link } from 'react-router-dom';
 import assets from "../assets/assets";
 
 const Footer = () => {
-  // Scroll to top of the page
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
   return (
     <footer className="bg-gradient-to-br from-gray-50 to-gray-100 border-t border-gray-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         
-        {/* Main Footer Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-10">
           
-          {/* Branding Section */}
           <div className="lg:col-span-2 space-y-4">
-            {/* Logo */}
             <div className="flex items-center gap-2">
               <img src={assets.logo} alt="AlphaCut.AI Logo" className="w-9 h-9" />
               <span className="text-xl font-bold text-gray-900">AlphaCut.AI</span>
             </div>
 
-            {/* Description */}
             <p className="text-gray-600 text-sm leading-relaxed">
               Remove backgrounds from images instantly with AI-powered precision. 
               Perfect for e-commerce, social media, and professional photography.
             </p>
 
-            {/* Supported Formats */}
             <div className="space-y-1">
               <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
                 Supported Formats
@@ -43,7 +37,6 @@ const Footer = () => {
               </div>
             </div>
 
-            {/* Social Media Links */}
             <div className="flex gap-3 pt-3 flex-wrap">
               {[
                 {
@@ -81,7 +74,6 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* Navigation Sections */}
           {[
             {
               title: "Product",
@@ -126,7 +118,7 @@ const Footer = () => {
                 {links.map(({ name, href }) => (
                   <li key={name}>
                     <Link
-                      href={href}
+                      to={href}
                       className="text-sm text-gray-600 hover:text-indigo-600 transition-colors block"
                     >
                       {name}
@@ -138,7 +130,6 @@ const Footer = () => {
           ))}
         </div>
 
-        {/* Footer Feature Highlights */}
         <div className="mt-12 pt-8 border-t border-gray-200">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
             {[
@@ -177,18 +168,15 @@ const Footer = () => {
         </div>
       </div>
 
-      {/* Bottom Bar */}
       <div className="border-t border-gray-200 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
             
-            {/* Copyright */}
             <p className="text-sm text-gray-600 text-center sm:text-left">
               &copy; {new Date().getFullYear()} AlphaCut.AI by{" "}
               <span className="font-semibold text-gray-900">Vishal Shep</span>
             </p>
 
-            {/* Locale + Back to Top */}
             <div className="flex items-center gap-4">
               <select className="text-sm border border-gray-200 rounded px-3 py-1 bg-white text-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500">
                 <option value="en">US English</option>
