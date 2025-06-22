@@ -1,3 +1,4 @@
+import Link from "next/link";
 import assets from "../assets/assets";
 
 const Footer = () => {
@@ -112,7 +113,7 @@ const Footer = () => {
             {
               title: "Company",
               links: [
-                { name: "About Us", href: "/aboutus" },
+                { name: "About Us", href: "/about" },
                 { name: "Pricing", href: "/pricing" },
                 { name: "Privacy Policy", href: "/legalpages" },
                 { name: "Terms of Service", href: "/legalpages" },
@@ -124,12 +125,12 @@ const Footer = () => {
               <ul className="space-y-2">
                 {links.map(({ name, href }) => (
                   <li key={name}>
-                    <a
+                    <Link
                       href={href}
                       className="text-sm text-gray-600 hover:text-indigo-600 transition-colors block"
                     >
                       {name}
-                    </a>
+                    </Link>
                   </li>
                 ))}
               </ul>
@@ -190,10 +191,10 @@ const Footer = () => {
             {/* Locale + Back to Top */}
             <div className="flex items-center gap-4">
               <select className="text-sm border border-gray-200 rounded px-3 py-1 bg-white text-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                <option value="en">🇺🇸 English</option>
-                <option value="es">🇪🇸 Español</option>
-                <option value="fr">🇫🇷 Français</option>
-                <option value="de">🇩🇪 Deutsch</option>
+                <option value="en">US English</option>
+                <option value="hi">IND Hindi</option>
+                <option value="mr">IND Marathi</option>
+                <option value="ja">JPN Japanese</option>
               </select>
 
               <button
