@@ -173,7 +173,7 @@ const Footer = () => {
           <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
             
             <p className="text-sm text-gray-600 text-center sm:text-left">
-              &copy; {new Date().getFullYear()}alphacutai.vercel.app by{" "}
+              &copy; {new Date().getFullYear()} alphacutai.vercel.app by{" "}
               <span className="font-semibold text-gray-900">Vishal Shep</span>
             </p>
 
